@@ -100,7 +100,7 @@ void InfineonRacer_detectCrossWalk(void){
 		}
 
 	}
-}
+} // Max 값은 유동적
 
 void InfineonRacer_control(void){
 	;
