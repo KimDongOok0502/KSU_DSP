@@ -41,6 +41,82 @@ void InfineonRacer_detectLane(void){
 	/* IR_LineScan.adcResult 의 정보를 읽어들여서
 	 * IR_Ctrl.Ls0Margin, IR_Ctrl.Ls1Margin 정보를 계산한다
 	 */
+	for(int i=4; i<124 ; i++)
+	{
+		IR_Ctrl.LCamera[i-4]= IR_LineScan.adcResult[0][i];
+		IR_Ctrl.RCamera[i-4]= IR_LineScan.adcResult[1][i];
+	}
+	IR_Ctrl.LMAX =0;
+	IR_Ctrl.RMAX =0;
+	IR_Ctrl.LMIN =4096;
+	IR_Ctrl.RMIN =4096;
+	for(int i=0; i<120; i++)
+	{
+		if(IR_Ctrl.LCamera[i]>IR_Ctrl.LMAX)
+		{
+			IR_Ctrl.LMAX=IR_Ctrl.LCamera[i];
+		}
+		if(IR_Ctrl.LCamera[i]<IR_Ctrl.LMIN)
+		{
+			IR_Ctrl.LMIN=IR_Ctrl.LCamera[i];
+		}
+		if(IR_Ctrl.RCamera[i]>IR_Ctrl.RMAX)
+		{
+			IR_Ctrl.RMAX=IR_Ctrl.RCamera[i];
+		}
+		if(IR_Ctrl.RCamera[i]<IR_Ctrl.RMIN)
+		{
+			IR_Ctrl.RMIN=IR_Ctrl.RCamera[i];
+		}
+	}
+	IR_Ctrl.LAVR=(IR_Ctrl.LMAX+IR_Ctrl.LMIN)/2;
+	IR_Ctrl.RAVR=(IR_Ctrl.RMAX+IR_Ctrl.RMIN)/2;
+	for(int i=0; i<120; i++)
+	{
+		if(IR_Ctrl.LCamera[i]>IR_Ctrl.LAVR)
+		{
+			IR_Ctrl.LCon[i] =1;
+		}
+		else
+		{
+			IR_Ctrl.LCon[i] =0;
+		}
+
+		if(IR_Ctrl.RCamera[i]>IR_Ctrl.RAVR)
+		{
+			IR_Ctrl.RCon[i] =1;
+		}
+		else
+		{
+			IR_Ctrl.RCon[i] =0;
+		}
+	}
+	for(int i=0; i<118; i++)
+	{
+		IR_Ctrl.LEdge[i] = IR_Ctrl.LCon[i]*(-1) +
+							IR_Ctrl.LCon[i+1]*2 +
+							IR_Ctrl.LCon[i+2]*(-1);
+	}
+	for(int i=0; i<118; i++)
+	{
+		IR_Ctrl.REdge[i] = IR_Ctrl.RCon[i]*(-1) +
+							IR_Ctrl.RCon[i+1]*2 +
+							IR_Ctrl.RCon[i+2]*(-1);
+	}
+	for(int i=0; i<118; i++)
+	{
+		if(IR_Ctrl.LEdge[i] == 1)
+		{
+			IR_Ctrl.LLin = i;
+		}
+	}
+	for(int i=117; i>=0; i--)
+	{
+		if(IR_Ctrl.REdge[i] == 1)
+		{
+			IR_Ctrl.RLin = i;
+		}
+	}
 }
 
 void InfineonRacer_detectCrossWalk(void){
