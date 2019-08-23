@@ -31,6 +31,8 @@
  * \{
  */
 #define ISR_PRIORITY_STM_INT0       40 /**< \brief Define the System Timer Interrupt priority.  */
+#define ISR_PRIORITY_STM_INT1       49 /**< \brief Define the System Timer Interrupt priority.  */
+#define ISR_PRIORITY_STM_INT2       48 /**< \brief Define the System Timer Interrupt priority.  */
 #define ISR_PRIORITY_INCRENC_ZERO   7 /**< \brief Define the Incremental encoder zero interrupt priority.  */
 
 #define ISR_PRIORITY_ASC_0_RX 4         /**< \brief Define the ASC0 receive interrupt priority.  */

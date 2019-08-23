@@ -17,6 +17,7 @@ void appTaskfu_init(void){
     BasicVadcBgScan_init();
     BasicGpt12Enc_init();
     AsclinShellInterface_init();
+    BasicUltraSonic_init();
 
 #if BOARD == APPLICATION_KIT_TC237
     tft_app_init(1);
@@ -59,6 +60,7 @@ void appTaskfu_10ms(void)
 		BasicGtmTom_run();
 		BasicVadcBgScan_run();
 
+
 		if(IR_Ctrl.basicTest == FALSE){
 			#if CODE == CODE_HAND
 				InfineonRacer_control();
@@ -73,6 +75,7 @@ void appTaskfu_10ms(void)
 	}
 	if(task_cnt_10m%5 == 0){
 		InfineonRacer_detectCrossWalk();
+		BasicUltraSonic_run();
 	}
 
 }
@@ -89,6 +92,7 @@ void appTaskfu_100ms(void)
 	}
 
 #elif BOARD == SHIELD_BUDDY
+
 
 #endif
 }

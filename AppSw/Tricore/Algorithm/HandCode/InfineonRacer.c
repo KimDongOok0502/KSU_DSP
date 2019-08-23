@@ -135,11 +135,11 @@ void InfineonRacer_detectCrossWalk(void){
 
 	for(int i=0; i<124 ; i++)
 	{
-		IR_Ctrl.LPF1_5[i] = (float32)IR_LineScan.adcResult[0][i]*0.1
-							+ (float32)IR_LineScan.adcResult[0][i+1]*0.2
-							+ (float32)IR_LineScan.adcResult[0][i+2]*0.4
-							+ (float32)IR_LineScan.adcResult[0][i+3]*0.2
-							+ (float32)IR_LineScan.adcResult[0][i+4]*0.1;
+		IR_Ctrl.LPF1_5[i] = (float32)IR_LineScan.adcResult[2][i]*0.1
+							+ (float32)IR_LineScan.adcResult[2][i+1]*0.2
+							+ (float32)IR_LineScan.adcResult[2][i+2]*0.4
+							+ (float32)IR_LineScan.adcResult[2][i+3]*0.2
+							+ (float32)IR_LineScan.adcResult[2][i+4]*0.1;
 
 	}
 
@@ -161,13 +161,13 @@ void InfineonRacer_detectCrossWalk(void){
 			IR_Ctrl.ConHL[i]=0;
 		}
 	}
-	for(int i=0; i<126 ; i++)
+	for(int i=0; i<122 ; i++)
 	{
 		IR_Ctrl.Edge[i] = IR_Ctrl.ConHL[i]*(-1)
 							+ IR_Ctrl.ConHL[i+1]*2
 							+ IR_Ctrl.ConHL[i+2]*(-1);
 	}
-	for(int i=0; i<126 ; i++)
+	for(int i=0; i<122 ; i++)
 	{
 
 		if(IR_Ctrl.Edge[i]==1)

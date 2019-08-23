@@ -1,14 +1,3 @@
-/**
- * \file BasicStm.c
- * \brief BasicStm
- *
- * \version InfineonRacer 1_0_0
- */
-
-/******************************************************************************/
-/*----------------------------------Includes----------------------------------*/
-/******************************************************************************/
-
 #include <stdio.h>
 
 #include "Configuration.h"
@@ -23,26 +12,13 @@
 /******************************************************************************/
 
 /******************************************************************************/
-/*-----------------------------Data Structures--------------------------------*/
-/******************************************************************************/
-typedef struct
-{
-    Ifx_STM             *stmSfr;            /**< \brief Pointer to Stm register base */
-    IfxStm_CompareConfig stmConfig;         /**< \brief Stm Configuration structure */
-    volatile uint8       LedBlink;          /**< \brief LED state variable */
-    volatile uint32      counter;           /**< \brief interrupt counter */
-} Basic_Stm;
-
-/******************************************************************************/
 /*------------------------------Global variables------------------------------*/
 /******************************************************************************/
 
-Basic_Stm g_Stm; /**< \brief Stm global data */
+Basic_UltraSonic IR_US; /**< \brief Stm global data */
 /******************************************************************************/
 /*-------------------------Function Prototypes--------------------------------*/
 /******************************************************************************/
-static void BlinkLed_run(void);
-static void BlinkLed_init(void);
 /******************************************************************************/
 /*------------------------Private Variables/Constants-------------------------*/
 /******************************************************************************/
@@ -55,7 +31,8 @@ static void BlinkLed_init(void);
 
 /** \name Interrupts for SystemTimer(STM) driver.
  * \{ */
-IFX_INTERRUPT(US_STM_Int0Handler, 0, ISR_PRIORITY_STM_INT0);
+IFX_INTERRUPT(US_Int0Handler, 0, ISR_PRIORITY_STM_INT1);
+//IFX_INTERRUPT(ECHO_Int0Handler, 0, ISR_PRIORITY_STM_INT2);
 /** \} */
 
 /** \} */
@@ -65,103 +42,93 @@ IFX_INTERRUPT(US_STM_Int0Handler, 0, ISR_PRIORITY_STM_INT0);
  * \isrPriority \ref ISR_PRIORITY_SystemTimer(STM)
  *
  */
-void US_STM_Int0Handler(void)
+void US_Int0Handler(void)
 {
-    IfxStm_clearCompareFlag(g_Stm.stmSfr, g_Stm.stmConfig.comparator);
+    IfxStm_clearCompareFlag(IR_US.stmSfr, IR_US.stmConfig.comparator);
 #ifdef SIMULATION
-	IfxStm_increaseCompare(g_Stm.stmSfr, g_Stm.stmConfig.comparator, 1000);
+	IfxStm_increaseCompare(IR_US.stmSfr, IR_US.stmConfig.comparator, 1000);
 #else
-	IfxStm_increaseCompare(g_Stm.stmSfr, g_Stm.stmConfig.comparator, TimeConst_1ms);
+	IfxStm_increaseCompare(IR_US.stmSfr, IR_US.stmConfig.comparator, TimeConst_100us);
 #endif
     IfxCpu_enableInterrupts();
 
-    g_Stm.counter++;
-    if(g_Stm.counter == 1000){
-    	g_Stm.counter = 0;
-    }
-
-    task_flag_1m = TRUE;
-
-    if(g_Stm.counter % 10 == 0){
-    	task_flag_10m = TRUE;
-    }
-    if(g_Stm.counter % 100 == 0){
-        task_flag_100m = TRUE;
-        BlinkLed_run();
-    }
-    if(g_Stm.counter % 1000 == 0){
-        task_flag_1000m = TRUE;
-    }
-
-    appIsrCb_1ms();
-
-}
-
-
-/** \brief LED Blinking
- *
- * This function blinks the LED connected to P 33.6 and counts the number
- *	of times the interrupt occurs.
- */
-static void BlinkLed_run(void)
-{
-    g_Stm.LedBlink ^= 1;
-    if (g_Stm.LedBlink == TRUE)
+    if(IfxPort_getPinState(ECHOleft.port, ECHOleft.pinIndex)==TRUE)
     {
-        IfxPort_setPinState(LED_TICK.port, LED_TICK.pinIndex, IfxPort_State_high);
+    	 IR_US.counterleft++;
     }
-    else
+    if(IfxPort_getPinState(ECHOleft.port, ECHOleft.pinIndex)==FALSE)
     {
-        IfxPort_setPinState(LED_TICK.port, LED_TICK.pinIndex, IfxPort_State_low);
+    	IR_US.EchoTickleft = IR_US.counterleft;
     }
 
+    if(IfxPort_getPinState(ECHOright.port, ECHOright.pinIndex)==TRUE)
+    {
+	  IR_US.counterright++;
+    }
+    if(IfxPort_getPinState(ECHOright.port, ECHOright.pinIndex)==FALSE)
+    {
+	  IR_US.EchoTickright = IR_US.counterright;
+    }
+
+
+
 }
 
-
-/** \brief LED Initialization
- *
- * This function initializes the LED connected to P13.0
- */
-static void BlinkLed_init(void)
+/*void ECHO_Int0Handler(void)
 {
-    IfxPort_setPinMode(LED_TICK.port, LED_TICK.pinIndex, IfxPort_Mode_outputPushPullGeneral);
-}
+	if(IfxPort_getPinState(ECHO.port, ECHO.pinIndex))
+	{
+		if(IfxPort_getPinState(ECHO.port, ECHO.pinIndex))
+		{
+			IR_US.counter = 0;
+		}
 
+		if(IfxPort_getPinState(ECHO.port, ECHO.pinIndex))
+		{
+			IR_US.EchoTick = IR_US.counter;
+		}
+	}
 
+    IfxCpu_enableInterrupts();
+
+    }
+}*/
 /** \brief Demo init API
  *
  * This function is called from main during initialization phase
  */
-void BasicStm_init(void)
+void BasicUltraSonic_init(void)
 {
-    printf("BasicStm_init() called\n");
+    printf("BasicUltraSonic_init() called\n");
 
     /* disable interrupts */
     boolean interruptState = IfxCpu_disableInterrupts();
 
-    g_Stm.LedBlink = 0;
-    g_Stm.counter  = 0;
+    //IR_US.counter  = 0;
 
     initTime();
 
-    // suspend by debugger enabled
-    IfxStm_enableOcdsSuspend (&MODULE_STM0);
+    IfxPort_setPinMode(TRIG.port, TRIG.pinIndex, IfxPort_Mode_outputPushPullGeneral);
+	IfxPort_setPinPadDriver(TRIG.port, TRIG.pinIndex, IfxPort_PadDriver_cmosAutomotiveSpeed1);
+	IfxPort_setPinState(TRIG.port, TRIG.pinIndex, IfxPort_State_low);
 
-    g_Stm.stmSfr = &MODULE_STM0;
-    IfxStm_initCompareConfig(&g_Stm.stmConfig);
+	IfxPort_setPinModeInput(ECHOleft.port, ECHOleft.pinIndex, IfxPort_InputMode_noPullDevice);
+	IfxPort_setPinModeInput(ECHOright.port, ECHOright.pinIndex, IfxPort_InputMode_noPullDevice);
 
-    g_Stm.stmConfig.triggerPriority = ISR_PRIORITY_STM_INT0;
-    g_Stm.stmConfig.typeOfService   = IfxSrc_Tos_cpu0;
+	// suspend by debugger enabled
+    IfxStm_enableOcdsSuspend (&MODULE_STM1);
+
+    IR_US.stmSfr = &MODULE_STM1;
+    IfxStm_initCompareConfig(&IR_US.stmConfig);
+
+    IR_US.stmConfig.triggerPriority = ISR_PRIORITY_STM_INT1;
+    IR_US.stmConfig.typeOfService   = IfxSrc_Tos_cpu0;
 #ifdef SIMULATION
     g_SrcSwInt.stmConfig.ticks      = 1000;
 #else
-    g_Stm.stmConfig.ticks           = TimeConst_1ms;
+    IR_US.stmConfig.ticks           = TimeConst_100us;
 #endif
-    IfxStm_initCompare(g_Stm.stmSfr, &g_Stm.stmConfig);
-
-    BlinkLed_init();
-
-    appTaskfu_init();
+    IfxStm_initCompare(IR_US.stmSfr, &IR_US.stmConfig);
 
     /* enable interrupts again */
     IfxCpu_restoreInterrupts(interruptState);
@@ -172,28 +139,21 @@ void BasicStm_init(void)
  *
  * This function is called from main, background loop
  */
-void BasicStm_run(void)
+void BasicUltraSonic_run(void)
 {
-//    printf("BasicStm_run() called\n");
-	if(task_flag_1m == TRUE){
-		appTaskfu_1ms();
-		task_flag_1m = FALSE;
-	}
+    IR_US.distanceleft = (IR_US.EchoTickleft * 340/2)/100;
+	IR_US.counterleft = 0;
+	IR_US.distanceright = (IR_US.EchoTickright * 340/2)/100;
+    IR_US.counterright = 0;
 
-	if(task_flag_10m == TRUE){
-		appTaskfu_10ms();
-		task_flag_10m = FALSE;
-	}
+	IfxPort_setPinState(TRIG.port, TRIG.pinIndex, IfxPort_State_low);
+	waitTime(TimeConst_100us);
 
-	if(task_flag_100m == TRUE){
-		appTaskfu_100ms();
-		task_flag_100m = FALSE;
-	}
+	IfxPort_setPinState(TRIG.port, TRIG.pinIndex, IfxPort_State_toggled);
+	waitTime(TimeConst_10us);
 
-	if(task_flag_1000m == TRUE){
-		appTaskfu_1000ms();
-		task_flag_1000m = FALSE;
-	}
+	IfxPort_setPinState(TRIG.port, TRIG.pinIndex, IfxPort_State_toggled);
+	waitTime(TimeConst_100us);
 
-	appTaskfu_idle();
+
 }

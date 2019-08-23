@@ -218,7 +218,7 @@ void GtmTomSrv_initTimer(void)
     {   /* GTM TOM configuration */
         IfxGtm_Tom_Timer_Config timerConfig;
         IfxGtm_Tom_Timer_initConfig(&timerConfig, &MODULE_GTM);
-        timerConfig.base.frequency       = 100;
+        timerConfig.base.frequency       = 50;
 //        timerConfig.base.isrPriority     = ISR_PRIORITY(INTERRUPT_TIMER_1MS);
 //        timerConfig.base.isrProvider     = ISR_PROVIDER(INTERRUPT_TIMER_1MS);
         timerConfig.base.minResolution   = (1.0 / timerConfig.base.frequency) / 1000;
@@ -277,7 +277,7 @@ void GtmTomSrvScan_initTimer(void)
     {   /* GTM TOM configuration */
         IfxGtm_Tom_Timer_Config timerConfig;
         IfxGtm_Tom_Timer_initConfig(&timerConfig, &MODULE_GTM);
-        timerConfig.base.frequency       = 100;
+        timerConfig.base.frequency       = 50;
 //        timerConfig.base.isrPriority     = ISR_PRIORITY(INTERRUPT_TIMER_1MS);
 //        timerConfig.base.isrProvider     = ISR_PROVIDER(INTERRUPT_TIMER_1MS);
         timerConfig.base.minResolution   = (1.0 / timerConfig.base.frequency) / 1000;

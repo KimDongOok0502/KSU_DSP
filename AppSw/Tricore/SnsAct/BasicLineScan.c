@@ -32,7 +32,7 @@ typedef struct
 {
     IfxVadc_Adc vadc; /* VADC handle */
     IfxVadc_Adc_Group adcGroup;
-    IfxVadc_Adc_Channel       adcChannel[2];
+    IfxVadc_Adc_Channel       adcChannel[3];
 } Basic_VadcAutoScan;
 
 /******************************************************************************/
@@ -94,7 +94,7 @@ void BasicLineScan_init(void)
     unsigned channels;
     unsigned mask;
     /* create channel config */
-    IfxVadc_Adc_ChannelConfig adcChannelConfig[2];
+    IfxVadc_Adc_ChannelConfig adcChannelConfig[3];
 
     {
     	chnIx = 0;
@@ -123,6 +123,19 @@ void BasicLineScan_init(void)
         channels = (1 << adcChannelConfig[chnIx].channelId);
         mask     = channels;
         IfxVadc_Adc_setScan(&g_VadcAutoScan.adcGroup, channels, mask);
+
+        chnIx = 2;
+		IfxVadc_Adc_initChannelConfig(&adcChannelConfig[chnIx], &g_VadcAutoScan.adcGroup);
+		adcChannelConfig[chnIx].channelId      = (IfxVadc_ChannelId)(TSL1401_AO_3);
+		adcChannelConfig[chnIx].resultRegister = (IfxVadc_ChannelResult)(TSL1401_AO_3);  /* use dedicated result register */
+
+		/* initialize the channel */
+		IfxVadc_Adc_initChannel(&g_VadcAutoScan.adcChannel[chnIx], &adcChannelConfig[chnIx]);
+
+		/* add to scan */
+		channels = (1 << adcChannelConfig[chnIx].channelId);
+		mask     = channels;
+		IfxVadc_Adc_setScan(&g_VadcAutoScan.adcGroup, channels, mask);
 
     }
 
@@ -177,7 +190,7 @@ void BasicLineScan_run(void)
     	waitTime(2*TimeConst_1us);
 
         /* check results */
-        for (chnIx = 0; chnIx < 2; ++chnIx)
+        for (chnIx = 0; chnIx < 3; ++chnIx)
         {
             /* wait for valid result */
             Ifx_VADC_RES conversionResult;

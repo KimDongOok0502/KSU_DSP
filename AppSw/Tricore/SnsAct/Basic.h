@@ -3,6 +3,7 @@
 
 #include "BasicLineScan.h"
 #include "BasicPort.h"
+#include "BasicUltraSonic.h"
 #include "BasicGtmTom.h"
 #include "BasicVadcBgScan.h"
 #include "BasicGpt12Enc.h"
