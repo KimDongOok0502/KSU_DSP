@@ -381,6 +381,7 @@ void GtmTomPwmHl_run(void){
     g_GtmTomPwmHl.tOn[0] =  halfPeriod + halfPeriod * IR_Motor.Motor0Vol;
     g_GtmTomPwmHl.tOn[1] =  halfPeriod - halfPeriod * IR_Motor.Motor0Vol;
 #elif BOARD == SHIELD_BUDDY
+    IR_Motor.Motor0Vol = 0.5;
     IR_Motor.Motor0VolU = IR_Motor.Motor0Vol;
     IR_Motor.Motor0VolV = -1.0 * IR_Motor.Motor0Vol;
     //IR_Motor.Motor0VolW = IR_Motor.Motor0Vol;

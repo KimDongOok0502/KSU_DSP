@@ -156,8 +156,8 @@ void BasicPort_run(void)
 	setOutputPin(M21_INH.port, M21_INH.pinIndex, IR_Motor0En.Motor1Enable);
 	setOutputPin(M22_INH.port, M22_INH.pinIndex, IR_Motor0En.Motor1Enable);
 #elif BOARD == SHIELD_BUDDY
-	setOutputPin(M_INH_U.port, M_INH_U.pinIndex, IR_Port.m_inh_u);
-	setOutputPin(M_INH_V.port, M_INH_V.pinIndex, IR_Port.m_inh_v);
+	setOutputPin(M_INH_U.port, M_INH_U.pinIndex, TRUE);
+	setOutputPin(M_INH_V.port, M_INH_V.pinIndex, TRUE);
 	setOutputPin(M_INH_W.port, M_INH_W.pinIndex, IR_Port.m_inh_w);
 #endif
 	/* Digital Input */

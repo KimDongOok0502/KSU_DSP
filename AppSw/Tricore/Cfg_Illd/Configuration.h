@@ -136,12 +136,12 @@
 //	#define M21_IN						IfxGtm_TOM0_14_TOUT6_P02_6_OUT
 //	#define M22_IN						IfxGtm_TOM0_15_TOUT7_P02_7_OUT
 //IFX007T
-	#define M_TRIGGER					IfxGtm_TOM0_0_TOUT77_P15_6_OUT
-	#define M_IN_UT						IfxGtm_TOM0_3_TOUT105_P10_3_OUT
+	#define M_TRIGGER					IfxGtm_TOM0_0_TOUT77_P15_6_OUT		//DIG24
+	#define M_IN_UT						IfxGtm_TOM0_3_TOUT105_P10_3_OUT		//DIG11
 	#define M_IN_UB						IfxGtm_TOM0_4_TOUT22_P33_0_OUT
-	#define M_IN_VT						IfxGtm_TOM0_2_TOUT107_P10_5_OUT
+	#define M_IN_VT						IfxGtm_TOM0_2_TOUT107_P10_5_OUT		//DIG10
 	#define M_IN_VB						IfxGtm_TOM0_5_TOUT23_P33_1_OUT
-	#define M_IN_WT						IfxGtm_TOM0_1_TOUT103_P10_1_OUT
+	#define M_IN_WT						IfxGtm_TOM1_15_TOUT7_P02_7_OUT		//DIG9
 	#define M_IN_WB						IfxGtm_TOM0_6_TOUT24_P33_2_OUT
 
 	#define SRV							IfxGtm_TOM0_12_TOUT98_P11_9_OUT
@@ -155,9 +155,9 @@
 	#define PORT00_0					IfxPort_P00_0
 	#define PORT00_1					IfxPort_P00_1
 
-	#define M_INH_U						IfxPort_P02_4
-	#define M_INH_V						IfxPort_P02_3
-	#define M_INH_W						IfxPort_P02_1
+	#define M_INH_U						IfxPort_P02_4		//DIG6
+	#define M_INH_V						IfxPort_P02_3		//DIG5
+	#define M_INH_W						IfxPort_P02_1		//DIG3
 
 	#define TSL1401_SI					IfxPort_P14_0
 	#define TSL1401_CLK					IfxPort_P14_1
