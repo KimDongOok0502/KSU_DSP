@@ -126,9 +126,9 @@ void BasicGpt12Enc_init(void)
         config.base.maxSpeed                  = 500;
         config.zeroIsrPriority                = ISR_PRIORITY(INTERRUPT_INCRINC_ZERO);
         config.zeroIsrProvider                = ISR_PROVIDER(INTERRUPT_INCRINC_ZERO);
-        config.pinA                           = &IfxGpt120_T2INA_P00_7_IN;
-        config.pinB                           = &IfxGpt120_T2EUDA_P00_8_IN;
-        config.pinZ                           = &IfxGpt120_T4EUDA_P00_9_IN;
+        config.pinA                           = &IfxGpt120_T2INA_P00_7_IN;					//DIG39
+        config.pinB                           = &IfxGpt120_T2EUDA_P00_8_IN;					//DIG26
+        config.pinZ                           = &IfxGpt120_T4EUDA_P00_9_IN;					//DIG28
         config.pinMode                        = IfxPort_InputMode_noPullDevice;
 
         config.base.speedFilterEnabled        = TRUE;

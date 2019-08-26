@@ -170,9 +170,9 @@
 	#define VADC_2						IfxPort_P20_7
 	#define VADC_3						IfxPort_P20_8
 
-	#define TRIG						IfxPort_P00_12
-	#define ECHOleft				    IfxPort_P00_6
-    #define ECHOright				    IfxPort_P00_11
+	#define TRIG						IfxPort_P00_12		//DIG34
+	#define ECHOleft				    IfxPort_P00_6		//DIG37
+    #define ECHOright				    IfxPort_P00_11		//DIG32
 
 	/* Encoder Emulation for Gpt12Enc Test */
 //	#define ENCODER_EMUL
